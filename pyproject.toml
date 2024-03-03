@@ -1,0 +1,36 @@
+[project]
+name = "pytelink"
+version = "0.0.1"
+description = "A python library to perform basic control functionality for telink-based BLE lights"
+authors = [
+    {name = "Tolga Tarhan", email = "ttarhan@users.noreply.github.com"},
+]
+dependencies = [
+    "python-dimond @ git+https://github.com/ttarhan/python-dimond.git@v0.2",
+]
+requires-python = ">=3.8"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project.scripts]
+pytelinkcli = "pytelink.__main__:main"
+
+[tool.pdm.scripts]
+validate = "mypy"
+lint = "pylint -j4 src"
+format = "black src"
+format-check = "black --check src"
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "mypy>=1.8.0",
+    "pylint>=3.1.0",
+    "black>=24.2.0",
+]
