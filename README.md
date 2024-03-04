@@ -7,7 +7,7 @@ communications, and implements a helpful library on top that has light-specific 
 
 ```
 from pytelink import Controller
-controller = Controller()
+controller = Controller("FF:00:00:00:00:00", "MeshName", "MeshPassword")
 controller.start()
 
 # ... a few seconds later ...
@@ -22,3 +22,5 @@ light.set_color(255, 0, 255)
 light.set_temperature(200)
 ```
 
+## Mesh info
+You can use `bluetoothctl` to find the Mac address of a light to use as your entry into the mesh (the first param to Controller()). The Mesh Name is whatever shows up in your lights' native app, and the Mesh Password is very likely hard-coded to the literal `2846` regardless of what the native app says.
