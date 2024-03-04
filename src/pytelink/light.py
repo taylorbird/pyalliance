@@ -23,6 +23,12 @@ class Light:
 
         print(f"New light: { mesh_address }")
 
+    def is_on(self) -> bool:
+        """
+        Returns True if the light is on
+        """
+        return self.brightness > 0
+
     def turn_on(self) -> None:
         """
         Turn the light on

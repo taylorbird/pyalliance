@@ -13,8 +13,8 @@ class Controller:
     The primary telink controller
     """
 
-    def __init__(self) -> None:
-        self._network = dimond(0x0211, "FF:00:05:08:0A:8B", "Back", "2846", callback=self._dimond_callback)
+    def __init__(self, mac_address: str, mesh_name: str, mesh_password: str) -> None:
+        self._network = dimond(0x0211, mac_address, mesh_name, mesh_password, callback=self._dimond_callback)
         self._lights: Dict[int, Light] = {}
 
     def start(self) -> None:
