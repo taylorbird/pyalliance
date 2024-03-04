@@ -18,6 +18,13 @@ build-backend = "pdm.backend"
 
 [project.scripts]
 pytelinkcli = "pytelink.__main__:main"
+pytelink-acnbridge = "pytelink.__acnbridge__:main [acnbridge]"
+
+
+[project.optional-dependencies]
+acnbridge = [
+    "sacn>=1.9.0",
+]
 
 [tool.pdm.scripts]
 validate = "mypy"

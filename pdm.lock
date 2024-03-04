@@ -2,10 +2,10 @@
 # It is not intended for manual editing.
 
 [metadata]
-groups = ["default", "dev"]
+groups = ["default", "dev", "acnbridge"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:d5bfb4098e8a7203d3eb0495f6c4580f810bed2ae273bc15eb660525965e12c9"
+content_hash = "sha256:5b4d84efc07827c0cc9e44ebed1dec9a7218bb235a9e63373ab8c4c1fd6f10ad"
 
 [[package]]
 name = "astroid"
@@ -279,6 +279,17 @@ groups = ["default"]
 dependencies = [
     "bluepy",
     "pycryptodome",
+]
+
+[[package]]
+name = "sacn"
+version = "1.9.0"
+requires_python = ">=3.6"
+summary = "sACN / E1.31 module for easy handling of DMX data over ethernet"
+groups = ["acnbridge"]
+files = [
+    {file = "sacn-1.9.0-py3-none-any.whl", hash = "sha256:17bd6b68474569c3088c6523ba71b7d28dfab389d2475c21dd9ac9b59a98f9f6"},
+    {file = "sacn-1.9.0.tar.gz", hash = "sha256:2e2980d08f32d6d763164db8e225af2898f4471dce11a60e48826d8ab447878a"},
 ]
 
 [[package]]
