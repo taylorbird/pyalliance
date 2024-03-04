@@ -1,11 +1,12 @@
-from typing import Any, List, Dict
+from typing import Any, List, Dict, Optional
 from dimond import dimond
 
 from .util import hexstring
 from .light import Light
-from .consts import NotificationOpcodes, CommandOpcodes
+from .consts import NotificationOpcodes
 from .parsers import Parsers
 from .events import LightEvent
+from .commands import Command, OnOffCommand, SetBrightnessCommand, SetColorCommand, SetTemperatureCommand
 
 
 class Controller:
@@ -29,23 +30,62 @@ class Controller:
         """
         return self._lights
 
-    def send_light_command(self, light: Light, opcode: CommandOpcodes, params: List[int]) -> None:
+    def light(self, mesh_address: int) -> Optional[Light]:
         """
-        Send a commands to the given light
+        Return a specific light in the network, or None if it has not been discovered yet
         """
-        self._network.send_packet(light.mesh_address, opcode.value, params)
+        return self._lights.get(mesh_address, None)
 
-    def send_all_lights_command(self, opcode: CommandOpcodes, params: List[int]) -> None:
+    def turn_on_all_lights(self) -> None:
         """
-        Send a commands to all lights on the network
+        Turns on all lights in the mesh
         """
-        self._network.send_packet(0xFFFF, opcode.value, params)
+        self.send_all_lights_command(OnOffCommand(True))
 
-    def send_connected_light_command(self, opcode: CommandOpcodes, params: List[int]) -> None:
+    def turn_off_all_lights(self) -> None:
+        """
+        Turns off all lights in the mesh
+        """
+        self.send_all_lights_command(OnOffCommand(False))
+
+    def set_brightness_all_lights(self, brightness: int) -> None:
+        """
+        Sets the brightness of all lights in the mesh
+        """
+        self.send_all_lights_command(SetBrightnessCommand(brightness))
+
+    def set_color_all_lights(self, r: int, g: int, b: int) -> None:
+        """
+        Sets the RGB color of all lights in the mesh
+        """
+        self.send_all_lights_command(SetColorCommand(r, g, b))
+
+    def set_temperature_all_lights(self, temperature: int) -> None:
+        """
+        Sets the white temperature of all lights in the mesh
+        """
+        self.send_all_lights_command(SetTemperatureCommand(temperature))
+
+    def send_light_command(self, light: Light, command: Command) -> None:
+        """
+        Send a command to a specific light
+        """
+        self._send_command(light.mesh_address, command)
+
+    def send_all_lights_command(self, command: Command) -> None:
+        """
+        Send a command to all lights on the mesg
+        """
+        self._send_command(0xFFFF, command)
+
+    def send_connected_light_command(self, command: Command) -> None:
         """
         Send a commands to the light we're directly connected to
         """
-        self._network.send_packet(0, opcode.value, params)
+        self._send_command(0, command)
+
+    def _send_command(self, mesh_address: int, command: Command) -> None:
+        self._network.send_packet(mesh_address, command.opcode().value, command.serialize_params())
 
     def _dimond_callback(self, _mesh: Any, message: List[int]) -> None:
         # print(f"CB: { hexstring(message) }")
