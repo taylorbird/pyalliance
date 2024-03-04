@@ -6,7 +6,7 @@ from .light import Light
 from .consts import NotificationOpcodes
 from .parsers import Parsers
 from .events import LightEvent
-from .commands import Command, OnOffCommand, SetBrightnessCommand, SetColorCommand, SetTemperatureCommand
+from .commands import Command
 
 
 class Controller:
@@ -17,6 +17,7 @@ class Controller:
     def __init__(self, mac_address: str, mesh_name: str, mesh_password: str) -> None:
         self._network = dimond(0x0211, mac_address, mesh_name, mesh_password, callback=self._dimond_callback)
         self._lights: Dict[int, Light] = {}
+        self._all_lights = Light(self, 0xFFFF)
 
     def start(self) -> None:
         """
@@ -30,41 +31,17 @@ class Controller:
         """
         return self._lights
 
+    def all(self) -> Light:
+        """
+        Returns a psuedo Light that can be used to control all lights on the mesh at once
+        """
+        return self._all_lights
+
     def light(self, mesh_address: int) -> Optional[Light]:
         """
         Return a specific light in the network, or None if it has not been discovered yet
         """
         return self._lights.get(mesh_address, None)
-
-    def turn_on_all_lights(self) -> None:
-        """
-        Turns on all lights in the mesh
-        """
-        self.send_all_lights_command(OnOffCommand(True))
-
-    def turn_off_all_lights(self) -> None:
-        """
-        Turns off all lights in the mesh
-        """
-        self.send_all_lights_command(OnOffCommand(False))
-
-    def set_brightness_all_lights(self, brightness: int) -> None:
-        """
-        Sets the brightness of all lights in the mesh
-        """
-        self.send_all_lights_command(SetBrightnessCommand(brightness))
-
-    def set_color_all_lights(self, r: int, g: int, b: int) -> None:
-        """
-        Sets the RGB color of all lights in the mesh
-        """
-        self.send_all_lights_command(SetColorCommand(r, g, b))
-
-    def set_temperature_all_lights(self, temperature: int) -> None:
-        """
-        Sets the white temperature of all lights in the mesh
-        """
-        self.send_all_lights_command(SetTemperatureCommand(temperature))
 
     def send_light_command(self, light: Light, command: Command) -> None:
         """

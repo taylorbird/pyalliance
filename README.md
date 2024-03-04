@@ -13,13 +13,19 @@ controller.start()
 # ... a few seconds later ...
 
 controller.lights() # returns a dict[address, Light]
-light = controller.lights()[5] # get a light
+light = controller.light(5) # get a light
 light.is_on() # returns boolean
 light.turn_off()
 light.turn_on()
 light.set_brightness(50)
 light.set_color(255, 0, 255)
 light.set_temperature(200)
+
+# or all lights at once
+controller.all().turn_off()
+controller.all().turn_on()
+# ... and so on
+
 ```
 
 ## Mesh info
