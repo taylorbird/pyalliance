@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
-from .consts import CommandOpcodes, ColorType
 from .events import LightEvent, LightStatusEvent
 from .commands import OnOffCommand, SetBrightnessCommand, SetColorCommand, SetTemperatureCommand
 
