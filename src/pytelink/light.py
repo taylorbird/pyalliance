@@ -16,12 +16,15 @@ class Light:
     mesh_address: int
     status: int = 0
     brightness: int = 0
+    color_r: int = 0
+    color_g: int = 0
+    color_b: int = 0
 
     def __init__(self, controller: "Controller", mesh_address: int) -> None:
         self.controller = controller
         self.mesh_address = mesh_address
 
-        print(f"New light: { mesh_address }")
+        # print(f"New light: { mesh_address }")
 
     def is_on(self) -> bool:
         """
@@ -51,9 +54,16 @@ class Light:
         """
         Sets the RGB color of the light
         """
+        if self.color_r == r and self.color_g == g and self.color_b == b:
+            return
+
         self.controller.send_light_command(self, SetColorCommand(r, g, b))
 
-    def set_temperature_all_lights(self, temperature: int) -> None:
+        self.color_r = r
+        self.color_g = g
+        self.color_b = b
+
+    def set_temperature(self, temperature: int) -> None:
         """
         Sets the white temperature of the light
         """

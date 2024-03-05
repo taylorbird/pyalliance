@@ -16,14 +16,14 @@ def main(_args: Optional[Dict[str, str]] = None) -> None:
 
     # Allow some time to find all the lights
     print("Discovering lights")
-    time.sleep(10)
-
-    controller.all().turn_on()
-    controller.all().set_color(255, 255, 255)
+    controller.process_notifications(5)
 
     lights = list(controller.lights().values())
     lights.sort(key=lambda item: item.mesh_address)
     print(f"Found {len(lights)} lights")
+
+    controller.all().turn_on()
+    controller.all().set_color(255, 255, 255)
 
     print("Starting sACN receiver")
 
@@ -41,13 +41,14 @@ def main(_args: Optional[Dict[str, str]] = None) -> None:
         colors = [data[x : x + 3] for x in range(0, len(data), 3)]
         colors = colors[0 : len(lights)]
         # print(colors)
+        print("Packet")
 
     while True:
+        print("Loop")
+
         for i, [r, g, b] in enumerate(colors):
             print(f"Set {i} to RGB {r} {g} {b} ({lights[i]})")
             lights[i].set_color(r, g, b)
-            time.sleep(0.5)
 
-        print("Done")
-
-        time.sleep(1)
+        print("Loop Done")
+        controller.process_notifications(0.050)

@@ -15,7 +15,9 @@ class Controller:
     """
 
     def __init__(self, mac_address: str, mesh_name: str, mesh_password: str) -> None:
-        self._network = dimond(0x0211, mac_address, mesh_name, mesh_password, callback=self._dimond_callback)
+        self._network = dimond(
+            0x0211, mac_address, mesh_name, mesh_password, callback=self._dimond_callback, auto_notifications=False
+        )
         self._lights: Dict[int, Light] = {}
         self._all_lights = Light(self, 0xFFFF)
 
@@ -24,6 +26,12 @@ class Controller:
         Starts the controller, connecting to the mesh
         """
         self._network.connect()
+
+    def process_notifications(self, timeout: float) -> None:
+        """
+        Process any pending notifications
+        """
+        self._network.process_notifications(timeout)
 
     def lights(self) -> Dict[int, Light]:
         """
@@ -41,7 +49,8 @@ class Controller:
         """
         Return a specific light in the network, or None if it has not been discovered yet
         """
-        return self._lights.get(mesh_address, None)
+        # return self._lights.get(mesh_address, None)
+        return self._get_or_create_light(mesh_address)
 
     def send_light_command(self, light: Light, command: Command) -> None:
         """
@@ -75,7 +84,7 @@ class Controller:
         try:
             parser = Parsers[NotificationOpcodes(opcode)]
             event = parser.parse(data)
-            print(f"Event: {event}")
+            # print(f"Event: {event}")
 
             if isinstance(event, LightEvent):
                 self._update_light_from_event(event)
@@ -83,8 +92,10 @@ class Controller:
         except (KeyError, ValueError):
             print(f"No parser for notification: { hexstring(message) }")
 
+    def _get_or_create_light(self, address: int) -> Light:
+        return self._lights.get(address) or self._lights.setdefault(address, Light(self, address))
+
     def _update_light_from_event(self, event: LightEvent) -> None:
-        address = event.mesh_address
-        light = self._lights.get(address) or self._lights.setdefault(address, Light(self, address))
+        light = self._get_or_create_light(event.mesh_address)
         light.update_from_event(event)
-        print(f"Light: {light}")
+        # print(f"Light: {light}")
