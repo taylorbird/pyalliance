@@ -5,7 +5,7 @@
 groups = ["default", "dev", "acnbridge"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:b136a7f8c6ba1359f3804fa2ac4e96cc81ee20555a87806c70e3e276a5f12a82"
+content_hash = "sha256:89e8862d7fc764d31ee77b7ab717bf556eea17a99550661a7c2446f501e23410"
 
 [[package]]
 name = "astroid"
@@ -310,6 +310,16 @@ groups = ["default"]
 dependencies = [
     "bluepy",
     "pycryptodome",
+]
+
+[[package]]
+name = "replbuilder"
+version = "1.2.0"
+summary = "Quickly build a custom command REPL environment with this tool"
+groups = ["default"]
+files = [
+    {file = "replbuilder-1.2.0-py3-none-any.whl", hash = "sha256:79c84c718a0570955c02f87c692fb37cca45bfa4fc43bc9cd4b1c17b5f42e2e0"},
+    {file = "replbuilder-1.2.0.tar.gz", hash = "sha256:934f5fcf0c81714298a1b523f7445f871ff11118ffa50003e45e6d80c00b1ae3"},
 ]
 
 [[package]]

@@ -1,4 +1,4 @@
-from typing import Any, List, Dict, Optional
+from typing import Any, List, Dict
 from dimond import dimond
 
 from .util import hexstring
@@ -45,7 +45,7 @@ class Controller:
         """
         return self._all_lights
 
-    def light(self, mesh_address: int) -> Optional[Light]:
+    def light(self, mesh_address: int) -> Light:
         """
         Return a specific light in the network, or None if it has not been discovered yet
         """
